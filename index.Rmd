@@ -3,8 +3,6 @@ title: "Aplicaciones de Software Estadístico I"
 author: "Andrea Gomez Vargas"
 date: "2024-05-12"
 output:
-  word_document:
-    toc: true
   html_document:
     code_folding: show
     df_print: kable
@@ -12,6 +10,8 @@ output:
     toc: true
     toc_float:
       collapsed: false
+  word_document:
+    toc: true
   pdf_document:
     toc: true
 ---
@@ -207,7 +207,7 @@ Cuadro1 <- EPHU2023 %>%
 
 paleta3 <- c("#f7b801", "#7678ed", "#3d348b") 
 
-ggplot(Cuadro1, 
+grafico1 <- ggplot(Cuadro1, 
        aes(fill= Tipo_hogar, x=Grupo, y=as.numeric((porcentaje)) )) + 
   geom_col() +
   scale_fill_manual(values = paleta3)+
@@ -221,6 +221,11 @@ ggplot(Cuadro1,
   geom_text(aes(label = porcentaje, group = Sexo),
             position = position_stack(vjust = .5),size = 4, colour = "white") +
   theme(legend.position = "bottom", legend.title = element_blank()) 
+
+grafico1
+
+ggsave(filename = "graficos/grafico1.png", plot = grafico1, width = 10, height = 6, dpi = 300)
+
 ```
 
 
@@ -269,7 +274,7 @@ Cuadro2 <- rbind(cuadro2A, cuadro2B) %>%
 
 paleta1 <- c("#fb8b24", "#d90368", "#820263")
 
-ggplot(Cuadro2, aes(cobertura,porcentaje)) +
+grafico2 <- ggplot(Cuadro2, aes(cobertura,porcentaje)) +
            geom_col( aes(width = 0.5,fill = cobertura)) +
            ylim(0,100) +
            theme_classic() +
@@ -281,6 +286,10 @@ ggplot(Cuadro2, aes(cobertura,porcentaje)) +
                 y = "porcentaje",
                 caption = "Fuente: INDEC, Encuesta Permanente de Hogares total urbano."
                 )
+grafico2
+
+ggsave(filename = "graficos/grafico2.png", plot = grafico2, width = 10, height = 6, dpi = 300)
+
 ```
 
 El *89,8%* de la población en edad jubilatoria del total nacional urbano, cuenta con cobertura previsional. Se puede decir que esta cobertura es casi universal en el país como resultado del sistema jubilatorio.
@@ -298,7 +307,7 @@ tabla3 <- BESS232 %>%
     porcentaje_sin = round(SinMoratoria/TotalJubilaciones*100,1)) 
     
 # gráfico 
-tabla3 %>% 
+grafico3 <- tabla3 %>% 
     pivot_longer(cols = c(6,7), names_to = "regimen", values_to = "porcentaje") %>% 
   mutate(regimen = case_when(regimen == "porcentaje_con" ~ "con moratoria",
                              regimen == "porcentaje_sin" ~ "sin moratoria"
@@ -311,6 +320,9 @@ tabla3 %>%
          x = "Sexo",
          y = "porcentaje",
          caption = "Fuente: ANSES, Boletín Estadísitico de la Seguridad Social.")
+
+grafico3
+ggsave(filename = "graficos/grafico3.png", plot = grafico3, width = 10, height = 6, dpi = 300)
   
 tabla3 %>% 
   select(5,2:4,6,7,-1) %>% 
@@ -330,7 +342,8 @@ tabla3 %>%
              porcentaje_sin = 'sin moratoria') %>%
   tab_source_note(
     source_note = md("**Fuente**: ANSES, Boletín Estadísitico de la Seguridad Social.")
-  )
+  ) %>% 
+  gtsave("graficos/tabla3.png", expand = 10)
 
 ```
 
@@ -406,7 +419,7 @@ Cuadro4 <- rbind(Cuadro4A, Cuadro4B) %>%
 
 
 
-ggplot(Cuadro4, aes(CH04, porcentaje, fill = CH04)) +
+grafico4 <- ggplot(Cuadro4, aes(CH04, porcentaje, fill = CH04)) +
   geom_col() +
   #coord_flip() +
   facet_wrap(~ Tipo_ingreso) +
@@ -419,6 +432,10 @@ ggplot(Cuadro4, aes(CH04, porcentaje, fill = CH04)) +
                 y = "porcentaje",
                 caption = "Fuente: INDEC, Encuesta Permanente de Hogares total urbano."
                 )
+
+grafico4
+
+ggsave(filename = "graficos/grafico4.png", plot = grafico4, width = 10, height = 6, dpi = 300)
 ```
 
 
@@ -436,7 +453,7 @@ tabla5 <- BESS2312 %>%
     TotalJubilaciones = as.numeric(TotalJubilaciones))
 
 
-tabla5 %>% 
+grafico5 <- tabla5 %>% 
   pivot_longer(cols = c(3,4), names_to = "regimen", values_to = "haber_medio") %>% 
   mutate(regimen = case_when(regimen == "ConMoratoria" ~ "con moratoria",
                              regimen == "SinMoratoria" ~ "sin moratoria"
@@ -450,6 +467,11 @@ tabla5 %>%
                 x = "Régimen",
                 caption = "Fuente: ANSES, Boletín Estadísitico de la Seguridad Social."
                 )
+
+grafico5
+
+
+ggsave(filename = "graficos/grafico5.png", plot = grafico5, width = 10, height = 6, dpi = 300)
 
 ```
 
